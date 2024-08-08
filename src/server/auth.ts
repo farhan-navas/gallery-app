@@ -6,6 +6,12 @@ import {
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 import DiscordProvider from "next-auth/providers/discord";
+import {
+  DefaultPostgresAccountsTable,
+  DefaultPostgresSessionsTable,
+  DefaultPostgresUsersTable,
+  DefaultPostgresVerificationTokenTable,
+} from "node_modules/@auth/drizzle-adapter/lib/pg";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -53,10 +59,11 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
+    usersTable: users as unknown as DefaultPostgresUsersTable,
+    accountsTable: accounts as unknown as DefaultPostgresAccountsTable,
+    sessionsTable: sessions as unknown as DefaultPostgresSessionsTable,
+    verificationTokensTable:
+      verificationTokens as unknown as DefaultPostgresVerificationTokenTable,
   }) as Adapter,
   providers: [
     DiscordProvider({
